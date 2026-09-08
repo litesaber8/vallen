@@ -94,13 +94,10 @@ def test_pipeline():
     ai = model.Player(name="AI", faction="Iron Recursion", deck=[])
     user.hand = [cards.CONSCRIPT]
     ai.hand = [cards.CONSCRIPT]
-    for p in (user, ai):
-        p.resource_pile = [model.ResourcePileCard(card=random.choice(dir(cards)))] # Simplified
+    # resource_pile left empty; scenarios under test do not depend on it
 
-    # Better setup for testing
-    ai.hand = [cards.CONSCRIPT]
     state = model.GameState(players=(user, ai))
-    state.active_idx = 1 # AI's turn
+    state.active_idx = 1  # AI's turn
 
     # 1. Test: LLM produces valid attack -> executes
     print("\n--- Scenario 1: Valid LLM Attack ---")
