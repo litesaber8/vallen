@@ -1,4 +1,4 @@
-from model import Card, CardType
+from model import Card, CardType, SupportType
 
 STATS = {
     1: (50, 100),
@@ -47,3 +47,13 @@ DIVINE_ENFORCER = unit("f2", "Divine Enforcer", "Fallen Holy", 2)
 INQUISITOR_VALE = unit("f3", "Inquisitor Vale", "Fallen Holy", 3, abilities=["deny_counter"])
 THRONE_GUARDIAN = unit("f4", "Throne Guardian", "Fallen Holy", 4, abilities=["sacrifice_denial"])
 FALLEN_SERAPH = unit("f5", "The Fallen Seraph", "Fallen Holy", 5)
+
+# --- Support Cards ---
+def support(id_, name, faction, stype):
+    return Card(id=id_, name=name, faction=faction, card_type=CardType.SUPPORT,
+                level=0, base_ap=0, base_hp=0, support_type=stype)
+
+S_NORMAL = support("sn1", "Quick Strike", "Humanity", SupportType.NORMAL)
+S_EQUIP = support("se1", "Iron Shield", "Humanity", SupportType.EQUIP)
+S_FIELD = support("sf1", "Fortified Base", "Humanity", SupportType.FIELD)
+S_COUNTER = support("sc1", "Tactical Intercept", "Humanity", SupportType.COUNTER)
