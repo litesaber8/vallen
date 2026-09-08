@@ -4,10 +4,11 @@ This module only answers "what is legal / what happened". It never decides
 WHY an action is taken — that's the heuristic layer's job (heuristic.py).
 """
 
-from typing import Optional
+import uuid
+from typing import Optional, Any, Dict
 from model import (
     Card, CardType, Mode, UnitState, ResourcePileCard, Player,
-    GameState, Phase, InvariantError,
+    GameState, Phase, InvariantError, EquipState
 )
 
 
@@ -72,7 +73,7 @@ def do_normal_summon(state: GameState, player: Player, card: Card, chosen_tribut
             state.emit(f"  Tribute (from Resource): {item.card.name} -> Discard Pile")
 
     zone = zone_freed if zone_freed is not None else player.empty_zone_index()
-    new_unit = UnitState(card=card, owner=player, current_hp=card.base_hp, mode=Mode.ATTACK)
+    new_unit = UnitState(uid=str(uuid.uuid4()), card=card, owner=player, current_hp=card.base_hp, mode=Mode.ATTACK)
     player.unit_zones[zone] = new_unit
     player.hand.remove(card)
     state.emit(f"  Normal Summon: {card.name} (LV{card.level}) -> zone {zone}")
@@ -92,6 +93,7 @@ def do_level_up(state: GameState, player: Player, material: UnitState, upgrade_c
         raise InvariantError(f"Illegal Level-Up into {upgrade_card.name}")
     zone = player.unit_zones.index(material)
     new_unit = UnitState(
+        uid=str(uuid.uuid4()),
         card=upgrade_card, owner=player, current_hp=upgrade_card.base_hp,
         mode=Mode.ATTACK, level_up_unlocked=True, built_from=material.card,
     )
@@ -169,6 +171,7 @@ def resolve_battle(
     Returns a list of (player, Card) for every unit destroyed this exchange.
     """
     _validate_battle_target(state, attacker, defender_player, defender)
+    attacker.has_attacked = True
 
     if defender is None:
         defender_player.lp -= attacker.ap
@@ -202,6 +205,11 @@ def _resolve_destructions(state: GameState, attacker_owner: Player, defender_own
                     state.emit(f"  {u.card.name} would be destroyed but sacrifice_denial holds "
                                f"(another Fallen Holy unit is on field) — stays at 0 HP, damaged")
                     continue
+                # Cleanup attached equips
+                for eq in u.attached_equips:
+                    player.discard_pile.append(eq.card)
+                u.attached_equips.clear()
+
                 player.unit_zones[i] = None
                 player.resource_pile.append(ResourcePileCard(card=u.card))
                 state.emit(f"  {u.card.name} destroyed -> {player.name}'s Resource Pile")
@@ -230,6 +238,7 @@ def recover_active_player_units(state: GameState):
     player = state.active
     for u in player.field_units():
         u.current_hp = u.max_hp
+        u.has_attacked = False
     assert_end_of_active_turn_recovery(player)
 
 
@@ -240,3 +249,69 @@ def do_reclaim_from_discard(state: GameState, player: Player, card: Card):
     player.resource_pile.append(ResourcePileCard(card=card))
     state.emit(f"  {player.name} reclaims {card.name}: Discard -> Resource Pile")
     assert_invariants(state)
+    return True
+
+def do_normal_support(state: GameState, player: Player, card: Card, target: Any):
+    """Resolves a Normal Support card effect."""
+    # Validation: Target must still be legal
+    # (In a real game, we'd check if 'target' is still present and matches the type)
+
+    state.emit(f"  Normal Support: {card.name} resolves against {target}")
+    # EFFECT PLACEHOLDER: actual effect logic goes here based on card.id
+    # Example: if card.id == 'slam': target.current_hp -= 100
+
+    player.hand.remove(card)
+    player.discard_pile.append(card)
+    assert_invariants(state)
+    return True
+
+
+def do_equip_support(state: GameState, player: Player, card: Card, target_unit: UnitState):
+    """Resolves an Equip Support card effect."""
+    # Validation: Target unit must still be on the field and owned by the player
+    if target_unit not in player.field_units():
+        raise InvariantError(f"Target unit {target_unit.card.name} is no longer on field")
+
+    equip = EquipState(card=card, owner=player, attached_to=target_unit)
+    target_unit.attached_equips.append(equip)
+    player.hand.remove(card)
+
+    state.emit(f"  Equip Support: {card.name} attached to {target_unit.card.name}")
+    assert_invariants(state)
+    return equip
+
+
+def do_field_support(state: GameState, player: Player, card: Card):
+    """Resolves a Field Support card effect."""
+    # Validation: Player must have an empty support zone
+    zone = player.empty_support_zone_index()
+    if zone is None:
+        raise InvariantError("No empty Support Zone available for Field")
+
+    player.support_zones[zone] = card
+    player.hand.remove(card)
+
+    state.emit(f"  Field Support: {card.name} activated in zone {zone}")
+    assert_invariants(state)
+    return card
+
+
+def do_counter_support(state: GameState, player: Player, card: Card, event: Dict[str, Any]):
+    """Resolves a Counter Support card effect."""
+    # Validation: Card must be set in a support zone
+    zone_idx = -1
+    for i, c in enumerate(player.support_zones):
+        if c == card:
+            zone_idx = i
+            break
+
+    if zone_idx == -1:
+        raise InvariantError(f"Counter {card.name} is not set in a Support Zone")
+
+    state.emit(f"  Counter Support: {card.name} activates against {event.get('action')}")
+    # EFFECT PLACEHOLDER: e.g., cancel event
+
+    player.support_zones[zone_idx] = None
+    player.discard_pile.append(card)
+    assert_invariants(state)
+    return True

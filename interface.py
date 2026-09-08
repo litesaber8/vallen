@@ -7,9 +7,10 @@ returned options and hands it to the corresponding do_* function in
 engine.py. The engine independently re-validates at the mutation boundary.
 """
 
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union, Dict, Any
 from model import (
     Card, CardType, Mode, UnitState, ResourcePileCard, Player, GameState,
+    SupportType
 )
 import engine
 
@@ -101,7 +102,7 @@ def legal_attacks(state: GameState) -> List[Tuple[UnitState, Optional[UnitState]
     defender_player = state.opponent
     results = []
 
-    attackers = [u for u in attacker_player.field_units() if u.mode == Mode.ATTACK]
+    attackers = [u for u in attacker_player.field_units() if u.mode == Mode.ATTACK and not u.has_attacked]
     if not attackers:
         return results
 
@@ -121,5 +122,55 @@ def legal_attacks(state: GameState) -> List[Tuple[UnitState, Optional[UnitState]
         for atk in attackers:
             for defn in opponent_units:
                 results.append((atk, defn))
+
+    return results
+
+
+def _is_counter_eligible(counter_card: Card, event: Dict[str, Any]) -> bool:
+    """
+    Determines if a Counter Support can respond to a specific event.
+    In a full implementation, this would check counter_card.abilities.
+    """
+    # For now, all Counters can respond to all Counterable events.
+    return True
+
+
+def legal_normal_supports(player: Player) -> List[Card]:
+    return [c for c in player.hand if c.card_type == CardType.SUPPORT and c.support_type == SupportType.NORMAL]
+
+
+def legal_equips(player: Player) -> List[Tuple[Card, UnitState]]:
+    results = []
+    hand_equips = [c for c in player.hand if c.card_type == CardType.SUPPORT and c.support_type == SupportType.EQUIP]
+    for card in hand_equips:
+        for unit in player.field_units():
+            # Equip logic: can target any unit on player's field.
+            results.append((card, unit))
+    return results
+
+
+def legal_fields(player: Player) -> List[Card]:
+    # Must have an empty Support Zone slot
+    if sum(1 for z in player.support_zones if z is None) == 0:
+        return []
+    return [c for c in player.hand if c.card_type == CardType.SUPPORT and c.support_type == SupportType.FIELD]
+
+
+def legal_counters(state: GameState) -> List[Tuple[Card, Dict[str, Any]]]:
+    """
+    Returns Counters that can be activated NOW.
+    Requires a pending event and a set Counter in the opponent's zone.
+    """
+    if state.pending_event is None:
+        return []
+
+    opponent = state.opponent
+    event = state.pending_event
+    results = []
+
+    for card in opponent.support_zones:
+        if card and card.card_type == CardType.SUPPORT and card.support_type == SupportType.COUNTER:
+            if _is_counter_eligible(card, event):
+                results.append((card, event))
 
     return results
