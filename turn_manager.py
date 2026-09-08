@@ -81,7 +81,15 @@ class TurnManager:
 
             state.pending_event = None
             return result
-        except ValueError as e:
+        except (ValueError, model.InvariantError) as e:
+            # Expected legality/invariant failures (missing target, mode
+            # changed mid-window, etc.) cleanly terminate the pending event
+            # rather than leaking it. Anything else (a genuine programming
+            # error — AttributeError, TypeError, KeyError, ...) is NOT
+            # caught here and propagates normally: we don't want a real bug
+            # silently converted into a "fizzled" game event, and leaving
+            # pending_event set in that case is correct — it's a crash, not
+            # a legal game outcome.
             state.emit(f"  Event fails to resolve: {e}")
             state.pending_event = None
             return {"status": "fizzled", "error": str(e)}
@@ -134,7 +142,19 @@ class TurnManager:
             # Create Pending Event
             if act_type == "attack":
                 atk_id = action.get("attacker_id")
+                def_id = action.get("defender_id")
                 attacker = self.resolve_unit(state, atk_id, player)
+                defender = self.resolve_unit(state, def_id) if def_id else None
+
+                # Validate BEFORE declaring, same pattern as every other
+                # action type below. A Defense Mode unit (or any other
+                # illegal attacker/target pairing) must never be able to
+                # set has_attacked or create a pending_event in the first
+                # place -- illegal action -> ValueError -> zero mutation.
+                legal_attacks = interface.legal_attacks(state)
+                if not any(a is attacker and d is defender for a, d in legal_attacks):
+                    raise ValueError(f"Attack by {attacker.card.name} is not legal right now")
+
                 attacker.has_attacked = True
 
             state.pending_event = {

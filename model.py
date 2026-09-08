@@ -6,7 +6,7 @@ in-game state so effects can never accidentally mutate a card definition.
 
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import Optional
+from typing import Optional, Dict, Any
 
 
 class CardType(Enum):

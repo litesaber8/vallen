@@ -24,9 +24,9 @@ def test_iron_recursion_reclaim():
     print(f"  Pre-state: IR Discard = {[c.name for c in ir.discard_pile]}, "
           f"IR Resource = {[c.card.name for c in ir.resource_pile]}")
 
-    scout = UnitState(card=cards.SCOUT_MK1, owner=ir, current_hp=1, mode=Mode.ATTACK)
+    scout = UnitState(uid="unit_test_01", card=cards.SCOUT_MK1, owner=ir, current_hp=1, mode=Mode.ATTACK)
     ir.unit_zones[0] = scout
-    attacker = UnitState(card=cards.LESSER_SERAPH, owner=fh,
+    attacker = UnitState(uid="unit_test_02", card=cards.LESSER_SERAPH, owner=fh,
                          current_hp=cards.LESSER_SERAPH.base_hp, mode=Mode.ATTACK)
     fh.unit_zones[0] = attacker
 
@@ -52,11 +52,11 @@ def test_fallen_holy_sacrifice_denial():
     ir = Player(name="Iron Recursion", faction="Iron Recursion", deck=[])
     state = GameState(players=(ir, fh), active_idx=0)
 
-    guardian = UnitState(card=cards.THRONE_GUARDIAN, owner=fh, current_hp=10, mode=Mode.ATTACK)
-    ally = UnitState(card=cards.LESSER_SERAPH, owner=fh, current_hp=50, mode=Mode.ATTACK)
+    guardian = UnitState(uid="unit_test_03", card=cards.THRONE_GUARDIAN, owner=fh, current_hp=10, mode=Mode.ATTACK)
+    ally = UnitState(uid="unit_test_04", card=cards.LESSER_SERAPH, owner=fh, current_hp=50, mode=Mode.ATTACK)
     fh.unit_zones[0] = guardian
     fh.unit_zones[1] = ally
-    striker = UnitState(card=cards.SOVEREIGN_KAEL, owner=ir,
+    striker = UnitState(uid="unit_test_05", card=cards.SOVEREIGN_KAEL, owner=ir,
                         current_hp=cards.SOVEREIGN_KAEL.base_hp, mode=Mode.ATTACK)
     ir.unit_zones[0] = striker
 
@@ -69,7 +69,7 @@ def test_fallen_holy_sacrifice_denial():
 
     fh.unit_zones[1] = None
     guardian.current_hp = 10
-    striker2 = UnitState(card=cards.SOVEREIGN_KAEL, owner=ir,
+    striker2 = UnitState(uid="unit_test_06", card=cards.SOVEREIGN_KAEL, owner=ir,
                          current_hp=cards.SOVEREIGN_KAEL.base_hp, mode=Mode.ATTACK)
     ir.unit_zones[0] = striker2
     destroyed2 = engine.resolve_battle(state, striker2, fh, defender=guardian)
@@ -98,13 +98,13 @@ def test_defense_mode_taunt():
     p2 = Player(name="Defender", faction="Verdant", deck=[])
     state = GameState(players=(p1, p2), active_idx=0)
 
-    atk = UnitState(card=cards.CONSCRIPT, owner=p1, current_hp=100, mode=Mode.ATTACK)
+    atk = UnitState(uid="unit_test_07", card=cards.CONSCRIPT, owner=p1, current_hp=100, mode=Mode.ATTACK)
     p1.unit_zones[0] = atk
 
     engine.resolve_battle(state, atk, p2, defender=None)
     print("  PASS: direct attack when board empty")
 
-    enemy_atk = UnitState(card=cards.CREEPING_VINE_A, owner=p2,
+    enemy_atk = UnitState(uid="unit_test_08", card=cards.CREEPING_VINE_A, owner=p2,
                           current_hp=100, mode=Mode.ATTACK)
     p2.unit_zones[0] = enemy_atk
 
@@ -120,9 +120,9 @@ def test_defense_mode_taunt():
     print("  PASS: can attack the sole Attack-mode unit")
 
     p2.unit_zones = [None, None, None]
-    enemy_def = UnitState(card=cards.ROOTWALKER, owner=p2,
+    enemy_def = UnitState(uid="unit_test_09", card=cards.ROOTWALKER, owner=p2,
                           current_hp=400, mode=Mode.DEFENSE)
-    enemy_atk2 = UnitState(card=cards.CREEPING_VINE_A, owner=p2,
+    enemy_atk2 = UnitState(uid="unit_test_10", card=cards.CREEPING_VINE_A, owner=p2,
                            current_hp=100, mode=Mode.ATTACK)
     p2.unit_zones[0] = enemy_def
     p2.unit_zones[1] = enemy_atk2
