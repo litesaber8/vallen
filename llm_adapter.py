@@ -1,5 +1,5 @@
 """
-Vallen — Phase 5 LLM Canonical Action Adapter.
+Vallen — LLM Canonical Action Adapter (Phase 5) + Real Provider (Phase 6).
 
 Responsibility:
   Translate untrusted model output into a Canonical Action — or reject it.
@@ -27,8 +27,10 @@ Pipeline:
 from __future__ import annotations
 
 import json
+import os
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Sequence
+from dataclasses import dataclass
+from typing import Any, Callable, Dict, List, Optional, Sequence
 
 import model
 import interface
@@ -86,6 +88,181 @@ class MockProvider(LLMProvider):
         if isinstance(item, str):
             return item
         return json.dumps(item)
+
+
+# ---------------------------------------------------------------------------
+# Real provider integration (Phase 6)
+# ---------------------------------------------------------------------------
+
+class ProviderError(Exception):
+    """
+    Transport / auth / configuration failure at the provider boundary.
+    Never carries the API key. Caller must not invoke TurnManager.
+    """
+
+    def __init__(self, reason: str):
+        self.reason = reason
+        super().__init__(reason)
+
+
+def _redact(text: str, secrets: Sequence[str]) -> str:
+    """Remove any known secret substrings from error/log text."""
+    out = text
+    for s in secrets:
+        if s and s in out:
+            out = out.replace(s, "***")
+    return out
+
+
+@dataclass(frozen=True)
+class ProviderConfig:
+    """
+    Existing configuration contract:
+      provider, api_url, api_key_env, model
+    """
+    provider: str
+    api_url: str
+    api_key_env: str
+    model: str
+    timeout_sec: float = 30.0
+
+
+# Transport: (method, url, headers, body_bytes, timeout) -> (status_code, response_text)
+Transport = Callable[[str, str, Dict[str, str], bytes, float], tuple]
+
+
+def _default_http_transport(
+    method: str,
+    url: str,
+    headers: Dict[str, str],
+    body: bytes,
+    timeout: float,
+) -> tuple:
+    """stdlib urllib transport. Used in production; tests inject a mock."""
+    import urllib.error
+    import urllib.request
+
+    req = urllib.request.Request(url, data=body, headers=headers, method=method)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return resp.getcode(), resp.read().decode("utf-8", errors="replace")
+    except urllib.error.HTTPError as e:
+        body_txt = e.read().decode("utf-8", errors="replace") if e.fp else ""
+        return e.code, body_txt
+    except urllib.error.URLError as e:
+        raise ProviderError(f"network failure: {e.reason}") from e
+    except TimeoutError as e:
+        raise ProviderError("timeout") from e
+
+
+class OpenAICompatibleProvider(LLMProvider):
+    """
+    OpenAI-compatible Chat Completions provider.
+    Returns the assistant message content as raw text for the adapter.
+    Knows nothing about engine.py or GameState mutation.
+    """
+
+    def __init__(
+        self,
+        config: ProviderConfig,
+        transport: Optional[Transport] = None,
+        api_key: Optional[str] = None,
+    ):
+        self.config = config
+        self._transport = transport or _default_http_transport
+        # Resolve key from env unless explicitly injected (tests only).
+        if api_key is not None:
+            self._api_key = api_key
+        else:
+            self._api_key = os.environ.get(config.api_key_env, "")
+        if not self._api_key:
+            raise ProviderError(
+                f"API key not found in environment variable {config.api_key_env!r}"
+            )
+
+    def _safe_error(self, msg: str) -> ProviderError:
+        return ProviderError(_redact(msg, [self._api_key]))
+
+    def complete(self, prompt: str) -> str:
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self._api_key}",
+        }
+        payload = {
+            "model": self.config.model,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a Vallen rules agent. Reply with ONLY a single "
+                        "JSON object for the chosen action. No markdown, no prose."
+                    ),
+                },
+                {"role": "user", "content": prompt},
+            ],
+            "temperature": 0,
+        }
+        body = json.dumps(payload).encode("utf-8")
+        try:
+            status, text = self._transport(
+                "POST",
+                self.config.api_url,
+                headers,
+                body,
+                self.config.timeout_sec,
+            )
+        except ProviderError:
+            raise
+        except Exception as e:
+            raise self._safe_error(f"transport error: {e}") from e
+
+        text = _redact(text, [self._api_key])
+
+        if status in (401, 403):
+            raise self._safe_error(f"auth failure (HTTP {status})")
+        if status == 408 or status == 504:
+            raise self._safe_error(f"timeout (HTTP {status})")
+        if status < 200 or status >= 300:
+            raise self._safe_error(f"API error (HTTP {status})")
+
+        # Parse provider envelope; content may still be non-JSON (adapter rejects).
+        try:
+            data = json.loads(text)
+        except json.JSONDecodeError as e:
+            # Provider returned non-JSON body — surface as raw for adapter path,
+            # but this is still a provider-level failure to extract content.
+            raise self._safe_error(f"provider returned non-JSON envelope: {e}") from e
+
+        try:
+            content = data["choices"][0]["message"]["content"]
+        except (KeyError, IndexError, TypeError) as e:
+            raise self._safe_error(
+                "provider payload missing choices[0].message.content"
+            ) from e
+
+        if not isinstance(content, str):
+            raise self._safe_error("provider content is not a string")
+        return content
+
+
+def build_provider(
+    config: ProviderConfig,
+    transport: Optional[Transport] = None,
+    api_key: Optional[str] = None,
+) -> LLMProvider:
+    """
+    Factory for the configuration contract.
+    provider="mock" → MockProvider (offline).
+    provider in {"openai", "openai_compatible", "anthropic"} → OpenAI-compatible HTTP.
+    (Anthropic can use a compatible gateway URL; native Anthropic wire format
+     can be added later without changing the adapter.)
+    """
+    name = config.provider.lower().strip()
+    if name == "mock":
+        return MockProvider()
+    if name in ("openai", "openai_compatible", "anthropic", "http", "real"):
+        return OpenAICompatibleProvider(config, transport=transport, api_key=api_key)
+    raise ProviderError(f"unknown provider: {config.provider!r}")
 
 
 # ---------------------------------------------------------------------------
