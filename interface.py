@@ -135,8 +135,26 @@ def _is_counter_eligible(counter_card: Card, event: Dict[str, Any]) -> bool:
     return True
 
 
-def legal_normal_supports(player: Player) -> List[Card]:
-    return [c for c in player.hand if c.card_type == CardType.SUPPORT and c.support_type == SupportType.NORMAL]
+def legal_normal_supports(player: Player) -> List[Tuple[Card, Optional[UnitState]]]:
+    """
+    Legal Normal Support plays as (card, target) pairs.
+
+    target=None means the card does not require a unit target (current fixture
+    cards and any Normal Support without an explicit targeting rule).
+
+    When a card later declares required targets, only those legal targets are
+    enumerated here. The heuristic / agent layer must never invent targets;
+    it only selects among the pairs this function returns.
+    """
+    results: List[Tuple[Card, Optional[UnitState]]] = []
+    for card in player.hand:
+        if card.card_type == CardType.SUPPORT and card.support_type == SupportType.NORMAL:
+            # Current Normal Supports are playable without a unit target.
+            # Expansion point for targeted Normals: append (card, unit) only
+            # for units that satisfy the card's targeting rule.
+            results.append((card, None))
+    return results
+
 
 
 def legal_equips(player: Player) -> List[Tuple[Card, UnitState]]:
