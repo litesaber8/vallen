@@ -1,5 +1,5 @@
 """
-Vallen — one-shot live playtest batch: Heuristic vs real Anthropic LLM.
+Vallen — one-shot live playtest batch: Heuristic vs LLM provider.
 
 Fixed-condition experiment per the Phase 7 read order:
   1. Usable Canonical Actions?
@@ -17,14 +17,25 @@ bit-identical every call. "--paired" therefore means: hold lp / max_turns /
 model constant and split the batch across seat A and seat B in one
 invocation so flags cannot drift between two separate CLI runs.
 
-Usage:
+Providers:
+  anthropic  — native Messages API (default URL api.anthropic.com)
+  openai     — OpenAI-compatible Chat Completions
+  ollama     — OpenAI-compatible against local Ollama
+               (default URL http://localhost:11434/v1/chat/completions)
+
+Usage (Ollama):
+    # Ollama often needs no key; set a dummy if the provider requires the env var
+    export VALLEN_LLM_API_KEY=ollama
+    python3 run_live_playtest.py --provider ollama --model gemma4:31b-cloud \
+        --n 6 --lp 800 --max-turns 40 --paired --out smoke_report.json
+
+Usage (Anthropic):
     export VALLEN_LLM_API_KEY=sk-ant-...
-    python3 run_live_playtest.py --n 20 --model <model-id> \
-        --lp 800 --max-turns 40 --paired --out report.json
+    python3 run_live_playtest.py --provider anthropic --model <model-id> \
+        --n 20 --lp 800 --max-turns 40 --paired --out report.json
 
 Only reads game state and provider config; never touches engine.py and
-never bypasses TurnManager.validate_and_execute() (see llm_adapter.py /
-playtest.py for the boundary this respects).
+never bypasses TurnManager.validate_and_execute().
 """
 
 from __future__ import annotations
@@ -32,10 +43,18 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from typing import Any, Dict
+from typing import Any, Dict, Optional, Tuple
 
 from llm_adapter import ProviderConfig, build_provider, ProviderError
 from playtest import run_playtest_batch
+
+
+# (provider_name_for_build, default_api_url)
+_PROVIDER_DEFAULTS: Dict[str, Tuple[str, str]] = {
+    "anthropic": ("anthropic", "https://api.anthropic.com/v1/messages"),
+    "openai": ("openai", "https://api.openai.com/v1/chat/completions"),
+    "ollama": ("openai", "http://localhost:11434/v1/chat/completions"),
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -44,8 +63,19 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     p.add_argument("--n", type=int, default=10, help="total games in the batch")
-    p.add_argument("--model", type=str, required=True, help="e.g. claude-sonnet-4-20250514")
-    p.add_argument("--api-url", type=str, default="https://api.anthropic.com/v1/messages")
+    p.add_argument("--model", type=str, required=True, help="model id as the provider expects it")
+    p.add_argument(
+        "--provider",
+        choices=sorted(_PROVIDER_DEFAULTS.keys()),
+        default="anthropic",
+        help="inference backend (ollama uses OpenAI-compatible wire format)",
+    )
+    p.add_argument(
+        "--api-url",
+        type=str,
+        default=None,
+        help="override default API URL for the chosen provider",
+    )
     p.add_argument(
         "--api-key-env",
         type=str,
@@ -68,7 +98,7 @@ def parse_args() -> argparse.Namespace:
             "in one invocation; report by_seat instead of a blended total"
         ),
     )
-    p.add_argument("--timeout-sec", type=float, default=30.0)
+    p.add_argument("--timeout-sec", type=float, default=60.0)
     p.add_argument("--out", type=str, default=None, help="write full JSON report here")
     return p.parse_args()
 
@@ -114,15 +144,19 @@ def main() -> int:
             file=sys.stderr,
         )
 
+    build_name, default_url = _PROVIDER_DEFAULTS[args.provider]
+    api_url = args.api_url or default_url
+
     cfg = ProviderConfig(
-        provider="anthropic",
-        api_url=args.api_url,
+        provider=build_name,
+        api_url=api_url,
         api_key_env=args.api_key_env,
         model=args.model,
         timeout_sec=args.timeout_sec,
     )
 
     # Fail fast on missing key *before* spending a batch of games on it.
+    # Ollama accepts any non-empty key string; set VALLEN_LLM_API_KEY=ollama if needed.
     try:
         build_provider(cfg)
     except ProviderError as e:
@@ -130,12 +164,17 @@ def main() -> int:
             f"Provider construction failed before any games ran: {e.reason}",
             file=sys.stderr,
         )
+        if args.provider == "ollama":
+            print(
+                "Hint: export VALLEN_LLM_API_KEY=ollama  "
+                "(Ollama ignores the value but the provider requires the env var.)",
+                file=sys.stderr,
+            )
         return 1
 
-    provider_name = f"anthropic:{args.model}"
+    provider_name = f"{args.provider}:{args.model}"
 
     if args.paired:
-        # Split as evenly as possible; odd n gives the extra game to seat A.
         n_a = (args.n + 1) // 2
         n_b = args.n // 2
         if n_a < 1 or n_b < 1:
@@ -158,6 +197,7 @@ def main() -> int:
             "mode": "paired",
             "batch_size": args.n,
             "provider": provider_name,
+            "api_url": api_url,
             "lp": args.lp,
             "max_turns": args.max_turns,
             "by_seat": {
@@ -167,11 +207,11 @@ def main() -> int:
             "matches_A": batch_a.get("matches", []),
             "matches_B": batch_b.get("matches", []),
         }
-        # Console summary keeps seats separate — do not blend winners.
         console = {
             "mode": "paired",
             "batch_size": args.n,
             "provider": provider_name,
+            "api_url": api_url,
             "by_seat": {
                 "A": _summary_from_batch(batch_a),
                 "B": _summary_from_batch(batch_b),
@@ -189,10 +229,7 @@ def main() -> int:
     if args.out:
         with open(args.out, "w", encoding="utf-8") as f:
             json.dump(report, f, indent=2)
-        print(
-            f"\nFull report written to {args.out}",
-            file=sys.stderr,
-        )
+        print(f"\nFull report written to {args.out}", file=sys.stderr)
 
     return 0
 
