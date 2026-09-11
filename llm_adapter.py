@@ -119,12 +119,17 @@ class ProviderConfig:
     """
     Existing configuration contract:
       provider, api_url, api_key_env, model
+
+    anthropic_version / max_tokens are only consumed by AnthropicProvider;
+    they default so existing OpenAI-compatible configs are unaffected.
     """
     provider: str
     api_url: str
     api_key_env: str
     model: str
     timeout_sec: float = 30.0
+    anthropic_version: str = "2023-06-01"
+    max_tokens: int = 1024
 
 
 # Transport: (method, url, headers, body_bytes, timeout) -> (status_code, response_text)
@@ -245,6 +250,105 @@ class OpenAICompatibleProvider(LLMProvider):
         return content
 
 
+class AnthropicProvider(LLMProvider):
+    """
+    Native Anthropic Messages API provider (POST {api_url}, e.g.
+    https://api.anthropic.com/v1/messages).
+
+    Differs from OpenAICompatibleProvider at the wire level only:
+      - auth via x-api-key + anthropic-version headers (not Bearer)
+      - system prompt is a top-level field, not a "system" message
+      - max_tokens is required
+      - response content is a block array; first {"type": "text"} block
+        is taken as the raw provider output
+
+    Knows nothing about engine.py or GameState mutation.
+    """
+
+    _SYSTEM_PROMPT = (
+        "You are a Vallen rules agent. Reply with ONLY a single "
+        "JSON object for the chosen action. No markdown, no prose."
+    )
+
+    def __init__(
+        self,
+        config: ProviderConfig,
+        transport: Optional[Transport] = None,
+        api_key: Optional[str] = None,
+    ):
+        self.config = config
+        self._transport = transport or _default_http_transport
+        if api_key is not None:
+            self._api_key = api_key
+        else:
+            self._api_key = os.environ.get(config.api_key_env, "")
+        if not self._api_key:
+            raise ProviderError(
+                f"API key not found in environment variable {config.api_key_env!r}"
+            )
+
+    def _safe_error(self, msg: str) -> ProviderError:
+        return ProviderError(_redact(msg, [self._api_key]))
+
+    def complete(self, prompt: str) -> str:
+        headers = {
+            "Content-Type": "application/json",
+            "x-api-key": self._api_key,
+            "anthropic-version": self.config.anthropic_version,
+        }
+        payload = {
+            "model": self.config.model,
+            "max_tokens": self.config.max_tokens,
+            "system": self._SYSTEM_PROMPT,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+        }
+        body = json.dumps(payload).encode("utf-8")
+        try:
+            status, text = self._transport(
+                "POST",
+                self.config.api_url,
+                headers,
+                body,
+                self.config.timeout_sec,
+            )
+        except ProviderError:
+            raise
+        except Exception as e:
+            raise self._safe_error(f"transport error: {e}") from e
+
+        text = _redact(text, [self._api_key])
+
+        if status in (401, 403):
+            raise self._safe_error(f"auth failure (HTTP {status})")
+        if status == 429:
+            raise self._safe_error("rate limited (HTTP 429)")
+        if status == 529:
+            raise self._safe_error("provider overloaded (HTTP 529)")
+        if status == 408 or status == 504:
+            raise self._safe_error(f"timeout (HTTP {status})")
+        if status < 200 or status >= 300:
+            raise self._safe_error(f"API error (HTTP {status})")
+
+        try:
+            data = json.loads(text)
+        except json.JSONDecodeError as e:
+            raise self._safe_error(f"provider returned non-JSON envelope: {e}") from e
+
+        content_blocks = data.get("content")
+        if not isinstance(content_blocks, list):
+            raise self._safe_error("provider payload missing content block array")
+
+        for block in content_blocks:
+            if isinstance(block, dict) and block.get("type") == "text":
+                text_out = block.get("text")
+                if not isinstance(text_out, str):
+                    raise self._safe_error("text block missing string 'text' field")
+                return text_out
+
+        raise self._safe_error("no text block found in provider content")
+
+
 def build_provider(
     config: ProviderConfig,
     transport: Optional[Transport] = None,
@@ -252,15 +356,17 @@ def build_provider(
 ) -> LLMProvider:
     """
     Factory for the configuration contract.
-    provider="mock" → MockProvider (offline).
-    provider in {"openai", "openai_compatible", "anthropic"} → OpenAI-compatible HTTP.
-    (Anthropic can use a compatible gateway URL; native Anthropic wire format
-     can be added later without changing the adapter.)
+    provider="mock"                              → MockProvider (offline)
+    provider="anthropic"                         → AnthropicProvider (native Messages API)
+    provider in {"openai","openai_compatible",
+                 "http","real"}                  → OpenAI-compatible Chat Completions HTTP
     """
     name = config.provider.lower().strip()
     if name == "mock":
         return MockProvider()
-    if name in ("openai", "openai_compatible", "anthropic", "http", "real"):
+    if name == "anthropic":
+        return AnthropicProvider(config, transport=transport, api_key=api_key)
+    if name in ("openai", "openai_compatible", "http", "real"):
         return OpenAICompatibleProvider(config, transport=transport, api_key=api_key)
     raise ProviderError(f"unknown provider: {config.provider!r}")
 
