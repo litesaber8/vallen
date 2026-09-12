@@ -227,6 +227,7 @@ class TurnManager:
         # Simple hand limit check: if player has > 7 cards, they must discard.
         # For this minimalistic version, we'll just truncate.
         player = state.active
+        player.unit_action_used_this_turn = False
         if len(player.hand) > 7:
             while len(player.hand) > 7:
                 card = player.hand.pop()

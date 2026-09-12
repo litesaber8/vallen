@@ -42,6 +42,8 @@ def tribute_cost(level: int) -> int:
 
 
 def can_normal_summon(player: Player, card: Card, chosen_tribute) -> bool:
+    if player.unit_action_used_this_turn:
+        return False
     total_value = 0
     zones_freed_by_tribute = 0
     for kind, item in chosen_tribute:
@@ -76,6 +78,7 @@ def do_normal_summon(state: GameState, player: Player, card: Card, chosen_tribut
     new_unit = UnitState(uid=str(uuid.uuid4()), card=card, owner=player, current_hp=card.base_hp, mode=Mode.ATTACK)
     player.unit_zones[zone] = new_unit
     player.hand.remove(card)
+    player.unit_action_used_this_turn = True
     state.emit(f"  Normal Summon: {card.name} (LV{card.level}) -> zone {zone}")
     assert_invariants(state)
     return new_unit
@@ -83,7 +86,8 @@ def do_normal_summon(state: GameState, player: Player, card: Card, chosen_tribut
 
 def can_level_up(player: Player, material: UnitState, upgrade_card: Card) -> bool:
     return (
-        material in player.field_units()
+        not player.unit_action_used_this_turn
+        and material in player.field_units()
         and upgrade_card.level == material.card.level + 1
     )
 
@@ -100,6 +104,7 @@ def do_level_up(state: GameState, player: Player, material: UnitState, upgrade_c
     player.unit_zones[zone] = new_unit
     player.hand.remove(upgrade_card)
     player.discard_pile.append(material.card)
+    player.unit_action_used_this_turn = True
     state.emit(f"  Level-Up Summon: {material.card.name} -> Discard Pile; "
                 f"{upgrade_card.name} enters with ability unlocked")
     assert_invariants(state)

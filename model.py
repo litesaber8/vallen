@@ -92,6 +92,11 @@ class Player:
     resource_pile: list = field(default_factory=list)
     discard_pile: list = field(default_factory=list)
     lp: int = 4000
+    # New rule (explicitly frozen, not previously part of the ruleset):
+    # at most one unit-card action (Normal Summon OR Level-Up Summon) per
+    # turn, never both, never chained. Reset to False at the start of each
+    # of this player's turns by TurnManager.next_turn().
+    unit_action_used_this_turn: bool = False
 
 
     def __post_init__(self):
