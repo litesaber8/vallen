@@ -1,0 +1,1189 @@
+{
+  "summary": {
+    "n_pairs": 10,
+    "winner_flipped_count": 0,
+    "outcome_changed_count": 1,
+    "intervention_engaged_count": 10,
+    "baseline_fp_win_rate": 0.3,
+    "R1_fp_win_rate": 0.3,
+    "note": "baseline_fp_win_rate / R1_fp_win_rate are descriptive aggregates only. Causal attribution to the overlay comes from outcome_changed_count (downstream fields only -- winner, turns, T_first_unit_destroyed, first_board_owner, first_board_owner_is_winner, T_board_control_change, T_lethal, residual_lp) and intervention_engaged_count in pair_diffs, not from the aggregate rates. mechanism_marker_changed (T_first_level_up shifting) is excluded from outcome_changed because it is definitional to the overlay engaging, not evidence of a downstream effect: an overlay can engage on every pair while outcome_changed_count == 0, meaning it fired but changed nothing that matters for balance.",
+    "pair_diffs": [
+      {
+        "matched_pair_id": "B101_A",
+        "first_mover": "A",
+        "baseline_winner": "AgentB",
+        "R1_winner": "AgentB",
+        "winner_flipped": false,
+        "baseline_turns": 18,
+        "R1_turns": 18,
+        "baseline_T_first_level_up": 3,
+        "R1_T_first_level_up": 7,
+        "baseline_T_first_unit_destroyed": 3,
+        "R1_T_first_unit_destroyed": 3,
+        "baseline_first_board_owner": "AgentA",
+        "R1_first_board_owner": "AgentA",
+        "baseline_first_board_is_winner": false,
+        "R1_first_board_is_winner": false,
+        "baseline_T_board_control_change": 8,
+        "R1_T_board_control_change": 8,
+        "baseline_T_lethal": 18,
+        "R1_T_lethal": 18,
+        "baseline_residual_lp": {
+          "AgentA": -100,
+          "AgentB": 750
+        },
+        "R1_residual_lp": {
+          "AgentA": -100,
+          "AgentB": 750
+        },
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          }
+        ],
+        "mechanism_marker_changed": true,
+        "outcome_changed": false,
+        "outcome_changed_fields": []
+      },
+      {
+        "matched_pair_id": "B101_B",
+        "first_mover": "B",
+        "baseline_winner": "AgentA",
+        "R1_winner": "AgentA",
+        "winner_flipped": false,
+        "baseline_turns": 18,
+        "R1_turns": 18,
+        "baseline_T_first_level_up": 3,
+        "R1_T_first_level_up": 7,
+        "baseline_T_first_unit_destroyed": 3,
+        "R1_T_first_unit_destroyed": 3,
+        "baseline_first_board_owner": "AgentB",
+        "R1_first_board_owner": "AgentB",
+        "baseline_first_board_is_winner": false,
+        "R1_first_board_is_winner": false,
+        "baseline_T_board_control_change": 8,
+        "R1_T_board_control_change": 8,
+        "baseline_T_lethal": 18,
+        "R1_T_lethal": 18,
+        "baseline_residual_lp": {
+          "AgentB": -100,
+          "AgentA": 750
+        },
+        "R1_residual_lp": {
+          "AgentB": -100,
+          "AgentA": 750
+        },
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          }
+        ],
+        "mechanism_marker_changed": true,
+        "outcome_changed": false,
+        "outcome_changed_fields": []
+      },
+      {
+        "matched_pair_id": "B102_A",
+        "first_mover": "A",
+        "baseline_winner": "AgentB",
+        "R1_winner": "AgentB",
+        "winner_flipped": false,
+        "baseline_turns": 18,
+        "R1_turns": 18,
+        "baseline_T_first_level_up": 3,
+        "R1_T_first_level_up": 7,
+        "baseline_T_first_unit_destroyed": 3,
+        "R1_T_first_unit_destroyed": 3,
+        "baseline_first_board_owner": "AgentA",
+        "R1_first_board_owner": "AgentA",
+        "baseline_first_board_is_winner": false,
+        "R1_first_board_is_winner": false,
+        "baseline_T_board_control_change": 8,
+        "R1_T_board_control_change": 8,
+        "baseline_T_lethal": 18,
+        "R1_T_lethal": 18,
+        "baseline_residual_lp": {
+          "AgentA": -100,
+          "AgentB": 750
+        },
+        "R1_residual_lp": {
+          "AgentA": -100,
+          "AgentB": 750
+        },
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          }
+        ],
+        "mechanism_marker_changed": true,
+        "outcome_changed": false,
+        "outcome_changed_fields": []
+      },
+      {
+        "matched_pair_id": "B102_B",
+        "first_mover": "B",
+        "baseline_winner": "AgentA",
+        "R1_winner": "AgentA",
+        "winner_flipped": false,
+        "baseline_turns": 18,
+        "R1_turns": 18,
+        "baseline_T_first_level_up": 3,
+        "R1_T_first_level_up": 7,
+        "baseline_T_first_unit_destroyed": 3,
+        "R1_T_first_unit_destroyed": 3,
+        "baseline_first_board_owner": "AgentB",
+        "R1_first_board_owner": "AgentB",
+        "baseline_first_board_is_winner": false,
+        "R1_first_board_is_winner": false,
+        "baseline_T_board_control_change": 8,
+        "R1_T_board_control_change": 8,
+        "baseline_T_lethal": 18,
+        "R1_T_lethal": 18,
+        "baseline_residual_lp": {
+          "AgentB": -100,
+          "AgentA": 750
+        },
+        "R1_residual_lp": {
+          "AgentB": -100,
+          "AgentA": 750
+        },
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          }
+        ],
+        "mechanism_marker_changed": true,
+        "outcome_changed": false,
+        "outcome_changed_fields": []
+      },
+      {
+        "matched_pair_id": "B103_A",
+        "first_mover": "A",
+        "baseline_winner": "AgentA",
+        "R1_winner": "AgentA",
+        "winner_flipped": false,
+        "baseline_turns": 23,
+        "R1_turns": 23,
+        "baseline_T_first_level_up": 3,
+        "R1_T_first_level_up": 7,
+        "baseline_T_first_unit_destroyed": 3,
+        "R1_T_first_unit_destroyed": 3,
+        "baseline_first_board_owner": "AgentA",
+        "R1_first_board_owner": "AgentA",
+        "baseline_first_board_is_winner": true,
+        "R1_first_board_is_winner": true,
+        "baseline_T_board_control_change": null,
+        "R1_T_board_control_change": null,
+        "baseline_T_lethal": 23,
+        "R1_T_lethal": 23,
+        "baseline_residual_lp": {
+          "AgentA": 800,
+          "AgentB": 0
+        },
+        "R1_residual_lp": {
+          "AgentA": 800,
+          "AgentB": 0
+        },
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          }
+        ],
+        "mechanism_marker_changed": true,
+        "outcome_changed": false,
+        "outcome_changed_fields": []
+      },
+      {
+        "matched_pair_id": "B103_B",
+        "first_mover": "B",
+        "baseline_winner": "AgentA",
+        "R1_winner": "AgentA",
+        "winner_flipped": false,
+        "baseline_turns": 22,
+        "R1_turns": 22,
+        "baseline_T_first_level_up": 3,
+        "R1_T_first_level_up": 8,
+        "baseline_T_first_unit_destroyed": 3,
+        "R1_T_first_unit_destroyed": 3,
+        "baseline_first_board_owner": "AgentB",
+        "R1_first_board_owner": "AgentB",
+        "baseline_first_board_is_winner": false,
+        "R1_first_board_is_winner": false,
+        "baseline_T_board_control_change": 6,
+        "R1_T_board_control_change": 6,
+        "baseline_T_lethal": 22,
+        "R1_T_lethal": 22,
+        "baseline_residual_lp": {
+          "AgentB": -100,
+          "AgentA": 750
+        },
+        "R1_residual_lp": {
+          "AgentB": -100,
+          "AgentA": 750
+        },
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          }
+        ],
+        "mechanism_marker_changed": true,
+        "outcome_changed": false,
+        "outcome_changed_fields": []
+      },
+      {
+        "matched_pair_id": "B104_A",
+        "first_mover": "A",
+        "baseline_winner": "AgentA",
+        "R1_winner": "AgentA",
+        "winner_flipped": false,
+        "baseline_turns": 21,
+        "R1_turns": 21,
+        "baseline_T_first_level_up": 3,
+        "R1_T_first_level_up": 7,
+        "baseline_T_first_unit_destroyed": 3,
+        "R1_T_first_unit_destroyed": 3,
+        "baseline_first_board_owner": "AgentA",
+        "R1_first_board_owner": "AgentA",
+        "baseline_first_board_is_winner": true,
+        "R1_first_board_is_winner": true,
+        "baseline_T_board_control_change": null,
+        "R1_T_board_control_change": null,
+        "baseline_T_lethal": 21,
+        "R1_T_lethal": 21,
+        "baseline_residual_lp": {
+          "AgentA": 800,
+          "AgentB": -50
+        },
+        "R1_residual_lp": {
+          "AgentA": 800,
+          "AgentB": -50
+        },
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          }
+        ],
+        "mechanism_marker_changed": true,
+        "outcome_changed": false,
+        "outcome_changed_fields": []
+      },
+      {
+        "matched_pair_id": "B104_B",
+        "first_mover": "B",
+        "baseline_winner": "AgentA",
+        "R1_winner": "AgentA",
+        "winner_flipped": false,
+        "baseline_turns": 20,
+        "R1_turns": 20,
+        "baseline_T_first_level_up": 3,
+        "R1_T_first_level_up": 8,
+        "baseline_T_first_unit_destroyed": 3,
+        "R1_T_first_unit_destroyed": 3,
+        "baseline_first_board_owner": "AgentB",
+        "R1_first_board_owner": "AgentB",
+        "baseline_first_board_is_winner": false,
+        "R1_first_board_is_winner": false,
+        "baseline_T_board_control_change": 6,
+        "R1_T_board_control_change": 6,
+        "baseline_T_lethal": 20,
+        "R1_T_lethal": 20,
+        "baseline_residual_lp": {
+          "AgentB": 0,
+          "AgentA": 750
+        },
+        "R1_residual_lp": {
+          "AgentB": 0,
+          "AgentA": 750
+        },
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          }
+        ],
+        "mechanism_marker_changed": true,
+        "outcome_changed": false,
+        "outcome_changed_fields": []
+      },
+      {
+        "matched_pair_id": "B105_A",
+        "first_mover": "A",
+        "baseline_winner": "AgentB",
+        "R1_winner": "AgentB",
+        "winner_flipped": false,
+        "baseline_turns": 18,
+        "R1_turns": 14,
+        "baseline_T_first_level_up": 3,
+        "R1_T_first_level_up": 8,
+        "baseline_T_first_unit_destroyed": 3,
+        "R1_T_first_unit_destroyed": 3,
+        "baseline_first_board_owner": "AgentA",
+        "R1_first_board_owner": "AgentA",
+        "baseline_first_board_is_winner": false,
+        "R1_first_board_is_winner": false,
+        "baseline_T_board_control_change": 8,
+        "R1_T_board_control_change": 7,
+        "baseline_T_lethal": 18,
+        "R1_T_lethal": 14,
+        "baseline_residual_lp": {
+          "AgentA": -100,
+          "AgentB": 750
+        },
+        "R1_residual_lp": {
+          "AgentA": -100,
+          "AgentB": 750
+        },
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          }
+        ],
+        "mechanism_marker_changed": true,
+        "outcome_changed": true,
+        "outcome_changed_fields": [
+          "turns",
+          "T_board_control_change",
+          "T_lethal"
+        ]
+      },
+      {
+        "matched_pair_id": "B105_B",
+        "first_mover": "B",
+        "baseline_winner": "AgentB",
+        "R1_winner": "AgentB",
+        "winner_flipped": false,
+        "baseline_turns": 19,
+        "R1_turns": 19,
+        "baseline_T_first_level_up": 3,
+        "R1_T_first_level_up": 7,
+        "baseline_T_first_unit_destroyed": 3,
+        "R1_T_first_unit_destroyed": 3,
+        "baseline_first_board_owner": "AgentB",
+        "R1_first_board_owner": "AgentB",
+        "baseline_first_board_is_winner": true,
+        "R1_first_board_is_winner": true,
+        "baseline_T_board_control_change": null,
+        "R1_T_board_control_change": null,
+        "baseline_T_lethal": 19,
+        "R1_T_lethal": 19,
+        "baseline_residual_lp": {
+          "AgentB": 800,
+          "AgentA": 0
+        },
+        "R1_residual_lp": {
+          "AgentB": 800,
+          "AgentA": 0
+        },
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          }
+        ],
+        "mechanism_marker_changed": true,
+        "outcome_changed": false,
+        "outcome_changed_fields": []
+      }
+    ]
+  },
+  "games": [
+    {
+      "winner": "AgentB",
+      "turns": 18,
+      "residual_lp": {
+        "AgentA": -100,
+        "AgentB": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 3,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 8,
+      "T_lethal": 18,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {},
+        "level_up_restricted_turns": [],
+        "level_up_actually_suppressed": [],
+        "enabled": false
+      },
+      "provenance_violations": [],
+      "session_id": "B101_A_baseline",
+      "first_mover": "A",
+      "overlay_r1_enabled": false,
+      "family": "B",
+      "seed": 101,
+      "matched_pair_id": "B101_A",
+      "arm": "baseline"
+    },
+    {
+      "winner": "AgentB",
+      "turns": 18,
+      "residual_lp": {
+        "AgentA": -100,
+        "AgentB": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 7,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 8,
+      "T_lethal": 18,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentA": 1,
+          "AgentB": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentB",
+            "turn_number": 4
+          }
+        ],
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "B101_A_R1",
+      "first_mover": "A",
+      "overlay_r1_enabled": true,
+      "family": "B",
+      "seed": 101,
+      "matched_pair_id": "B101_A",
+      "arm": "R1"
+    },
+    {
+      "winner": "AgentA",
+      "turns": 18,
+      "residual_lp": {
+        "AgentB": -100,
+        "AgentA": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 3,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 8,
+      "T_lethal": 18,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {},
+        "level_up_restricted_turns": [],
+        "level_up_actually_suppressed": [],
+        "enabled": false
+      },
+      "provenance_violations": [],
+      "session_id": "B101_B_baseline",
+      "first_mover": "B",
+      "overlay_r1_enabled": false,
+      "family": "B",
+      "seed": 101,
+      "matched_pair_id": "B101_B",
+      "arm": "baseline"
+    },
+    {
+      "winner": "AgentA",
+      "turns": 18,
+      "residual_lp": {
+        "AgentB": -100,
+        "AgentA": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 7,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 8,
+      "T_lethal": 18,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentB": 1,
+          "AgentA": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentA",
+            "turn_number": 4
+          }
+        ],
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "B101_B_R1",
+      "first_mover": "B",
+      "overlay_r1_enabled": true,
+      "family": "B",
+      "seed": 101,
+      "matched_pair_id": "B101_B",
+      "arm": "R1"
+    },
+    {
+      "winner": "AgentB",
+      "turns": 18,
+      "residual_lp": {
+        "AgentA": -100,
+        "AgentB": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 3,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 8,
+      "T_lethal": 18,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {},
+        "level_up_restricted_turns": [],
+        "level_up_actually_suppressed": [],
+        "enabled": false
+      },
+      "provenance_violations": [],
+      "session_id": "B102_A_baseline",
+      "first_mover": "A",
+      "overlay_r1_enabled": false,
+      "family": "B",
+      "seed": 102,
+      "matched_pair_id": "B102_A",
+      "arm": "baseline"
+    },
+    {
+      "winner": "AgentB",
+      "turns": 18,
+      "residual_lp": {
+        "AgentA": -100,
+        "AgentB": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 7,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 8,
+      "T_lethal": 18,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentA": 1,
+          "AgentB": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentB",
+            "turn_number": 4
+          }
+        ],
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "B102_A_R1",
+      "first_mover": "A",
+      "overlay_r1_enabled": true,
+      "family": "B",
+      "seed": 102,
+      "matched_pair_id": "B102_A",
+      "arm": "R1"
+    },
+    {
+      "winner": "AgentA",
+      "turns": 18,
+      "residual_lp": {
+        "AgentB": -100,
+        "AgentA": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 3,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 8,
+      "T_lethal": 18,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {},
+        "level_up_restricted_turns": [],
+        "level_up_actually_suppressed": [],
+        "enabled": false
+      },
+      "provenance_violations": [],
+      "session_id": "B102_B_baseline",
+      "first_mover": "B",
+      "overlay_r1_enabled": false,
+      "family": "B",
+      "seed": 102,
+      "matched_pair_id": "B102_B",
+      "arm": "baseline"
+    },
+    {
+      "winner": "AgentA",
+      "turns": 18,
+      "residual_lp": {
+        "AgentB": -100,
+        "AgentA": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 7,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 8,
+      "T_lethal": 18,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentB": 1,
+          "AgentA": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentA",
+            "turn_number": 4
+          }
+        ],
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "B102_B_R1",
+      "first_mover": "B",
+      "overlay_r1_enabled": true,
+      "family": "B",
+      "seed": 102,
+      "matched_pair_id": "B102_B",
+      "arm": "R1"
+    },
+    {
+      "winner": "AgentA",
+      "turns": 23,
+      "residual_lp": {
+        "AgentA": 800,
+        "AgentB": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 3,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 23,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {},
+        "level_up_restricted_turns": [],
+        "level_up_actually_suppressed": [],
+        "enabled": false
+      },
+      "provenance_violations": [],
+      "session_id": "B103_A_baseline",
+      "first_mover": "A",
+      "overlay_r1_enabled": false,
+      "family": "B",
+      "seed": 103,
+      "matched_pair_id": "B103_A",
+      "arm": "baseline"
+    },
+    {
+      "winner": "AgentA",
+      "turns": 23,
+      "residual_lp": {
+        "AgentA": 800,
+        "AgentB": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 7,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 23,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentA": 1,
+          "AgentB": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentB",
+            "turn_number": 4
+          }
+        ],
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "B103_A_R1",
+      "first_mover": "A",
+      "overlay_r1_enabled": true,
+      "family": "B",
+      "seed": 103,
+      "matched_pair_id": "B103_A",
+      "arm": "R1"
+    },
+    {
+      "winner": "AgentA",
+      "turns": 22,
+      "residual_lp": {
+        "AgentB": -100,
+        "AgentA": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 3,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 6,
+      "T_lethal": 22,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {},
+        "level_up_restricted_turns": [],
+        "level_up_actually_suppressed": [],
+        "enabled": false
+      },
+      "provenance_violations": [],
+      "session_id": "B103_B_baseline",
+      "first_mover": "B",
+      "overlay_r1_enabled": false,
+      "family": "B",
+      "seed": 103,
+      "matched_pair_id": "B103_B",
+      "arm": "baseline"
+    },
+    {
+      "winner": "AgentA",
+      "turns": 22,
+      "residual_lp": {
+        "AgentB": -100,
+        "AgentA": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 8,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 6,
+      "T_lethal": 22,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentB": 1,
+          "AgentA": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentA",
+            "turn_number": 4
+          }
+        ],
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "B103_B_R1",
+      "first_mover": "B",
+      "overlay_r1_enabled": true,
+      "family": "B",
+      "seed": 103,
+      "matched_pair_id": "B103_B",
+      "arm": "R1"
+    },
+    {
+      "winner": "AgentA",
+      "turns": 21,
+      "residual_lp": {
+        "AgentA": 800,
+        "AgentB": -50
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 3,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 21,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {},
+        "level_up_restricted_turns": [],
+        "level_up_actually_suppressed": [],
+        "enabled": false
+      },
+      "provenance_violations": [],
+      "session_id": "B104_A_baseline",
+      "first_mover": "A",
+      "overlay_r1_enabled": false,
+      "family": "B",
+      "seed": 104,
+      "matched_pair_id": "B104_A",
+      "arm": "baseline"
+    },
+    {
+      "winner": "AgentA",
+      "turns": 21,
+      "residual_lp": {
+        "AgentA": 800,
+        "AgentB": -50
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 7,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 21,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentA": 1,
+          "AgentB": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentB",
+            "turn_number": 4
+          }
+        ],
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "B104_A_R1",
+      "first_mover": "A",
+      "overlay_r1_enabled": true,
+      "family": "B",
+      "seed": 104,
+      "matched_pair_id": "B104_A",
+      "arm": "R1"
+    },
+    {
+      "winner": "AgentA",
+      "turns": 20,
+      "residual_lp": {
+        "AgentB": 0,
+        "AgentA": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 3,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 6,
+      "T_lethal": 20,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {},
+        "level_up_restricted_turns": [],
+        "level_up_actually_suppressed": [],
+        "enabled": false
+      },
+      "provenance_violations": [],
+      "session_id": "B104_B_baseline",
+      "first_mover": "B",
+      "overlay_r1_enabled": false,
+      "family": "B",
+      "seed": 104,
+      "matched_pair_id": "B104_B",
+      "arm": "baseline"
+    },
+    {
+      "winner": "AgentA",
+      "turns": 20,
+      "residual_lp": {
+        "AgentB": 0,
+        "AgentA": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 8,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 6,
+      "T_lethal": 20,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentB": 1,
+          "AgentA": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentA",
+            "turn_number": 4
+          }
+        ],
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "B104_B_R1",
+      "first_mover": "B",
+      "overlay_r1_enabled": true,
+      "family": "B",
+      "seed": 104,
+      "matched_pair_id": "B104_B",
+      "arm": "R1"
+    },
+    {
+      "winner": "AgentB",
+      "turns": 18,
+      "residual_lp": {
+        "AgentA": -100,
+        "AgentB": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 3,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 8,
+      "T_lethal": 18,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {},
+        "level_up_restricted_turns": [],
+        "level_up_actually_suppressed": [],
+        "enabled": false
+      },
+      "provenance_violations": [],
+      "session_id": "B105_A_baseline",
+      "first_mover": "A",
+      "overlay_r1_enabled": false,
+      "family": "B",
+      "seed": 105,
+      "matched_pair_id": "B105_A",
+      "arm": "baseline"
+    },
+    {
+      "winner": "AgentB",
+      "turns": 14,
+      "residual_lp": {
+        "AgentA": -100,
+        "AgentB": 750
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 8,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": false,
+      "T_board_control_change": 7,
+      "T_lethal": 14,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentA": 1,
+          "AgentB": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentB",
+            "turn_number": 4
+          }
+        ],
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "B105_A_R1",
+      "first_mover": "A",
+      "overlay_r1_enabled": true,
+      "family": "B",
+      "seed": 105,
+      "matched_pair_id": "B105_A",
+      "arm": "R1"
+    },
+    {
+      "winner": "AgentB",
+      "turns": 19,
+      "residual_lp": {
+        "AgentB": 800,
+        "AgentA": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 3,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 19,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {},
+        "level_up_restricted_turns": [],
+        "level_up_actually_suppressed": [],
+        "enabled": false
+      },
+      "provenance_violations": [],
+      "session_id": "B105_B_baseline",
+      "first_mover": "B",
+      "overlay_r1_enabled": false,
+      "family": "B",
+      "seed": 105,
+      "matched_pair_id": "B105_B",
+      "arm": "baseline"
+    },
+    {
+      "winner": "AgentB",
+      "turns": 19,
+      "residual_lp": {
+        "AgentB": 800,
+        "AgentA": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 7,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 19,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentB": 1,
+          "AgentA": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentA",
+            "turn_number": 4
+          }
+        ],
+        "level_up_actually_suppressed": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "B105_B_R1",
+      "first_mover": "B",
+      "overlay_r1_enabled": true,
+      "family": "B",
+      "seed": 105,
+      "matched_pair_id": "B105_B",
+      "arm": "R1"
+    }
+  ]
+}

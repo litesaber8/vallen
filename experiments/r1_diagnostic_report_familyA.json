@@ -1,0 +1,470 @@
+{
+  "summary": {
+    "n_games": 12,
+    "n_treatment": 10,
+    "n_control": 2,
+    "treatment_fp_win_rate": 1.0,
+    "control_fp_win_rate": 1.0,
+    "treatment_draws": 0,
+    "control_draws": 0,
+    "note": "Treatment sessions use balance/openings.py seeded hands (genuine per-seed variation within Opening Family A). CONTROL uses the original fixed-hand build_deterministic_opening() via balance.openings.build_control(), unchanged."
+  },
+  "games": [
+    {
+      "winner": "AgentA",
+      "turns": 11,
+      "residual_lp": {
+        "AgentA": 800,
+        "AgentB": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 5,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 11,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentA": 1,
+          "AgentB": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentB",
+            "turn_number": 4
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "A101",
+      "first_mover": "A",
+      "overlay_r1_enabled": true,
+      "family": "A",
+      "seed": 101
+    },
+    {
+      "winner": "AgentB",
+      "turns": 11,
+      "residual_lp": {
+        "AgentB": 800,
+        "AgentA": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 5,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 11,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentB": 1,
+          "AgentA": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentA",
+            "turn_number": 4
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "A101",
+      "first_mover": "B",
+      "overlay_r1_enabled": true,
+      "family": "A",
+      "seed": 101
+    },
+    {
+      "winner": "AgentA",
+      "turns": 11,
+      "residual_lp": {
+        "AgentA": 800,
+        "AgentB": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 5,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 11,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentA": 1,
+          "AgentB": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentB",
+            "turn_number": 4
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "A102",
+      "first_mover": "A",
+      "overlay_r1_enabled": true,
+      "family": "A",
+      "seed": 102
+    },
+    {
+      "winner": "AgentB",
+      "turns": 11,
+      "residual_lp": {
+        "AgentB": 800,
+        "AgentA": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 5,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 11,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentB": 1,
+          "AgentA": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentA",
+            "turn_number": 4
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "A102",
+      "first_mover": "B",
+      "overlay_r1_enabled": true,
+      "family": "A",
+      "seed": 102
+    },
+    {
+      "winner": "AgentA",
+      "turns": 11,
+      "residual_lp": {
+        "AgentA": 800,
+        "AgentB": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 5,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 11,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentA": 1,
+          "AgentB": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentB",
+            "turn_number": 4
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "A103",
+      "first_mover": "A",
+      "overlay_r1_enabled": true,
+      "family": "A",
+      "seed": 103
+    },
+    {
+      "winner": "AgentB",
+      "turns": 11,
+      "residual_lp": {
+        "AgentB": 800,
+        "AgentA": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 5,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 11,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentB": 1,
+          "AgentA": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentA",
+            "turn_number": 4
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "A103",
+      "first_mover": "B",
+      "overlay_r1_enabled": true,
+      "family": "A",
+      "seed": 103
+    },
+    {
+      "winner": "AgentA",
+      "turns": 11,
+      "residual_lp": {
+        "AgentA": 800,
+        "AgentB": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 5,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 11,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentA": 1,
+          "AgentB": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentB",
+            "turn_number": 4
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "A104",
+      "first_mover": "A",
+      "overlay_r1_enabled": true,
+      "family": "A",
+      "seed": 104
+    },
+    {
+      "winner": "AgentB",
+      "turns": 11,
+      "residual_lp": {
+        "AgentB": 800,
+        "AgentA": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 5,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 11,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentB": 1,
+          "AgentA": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentA",
+            "turn_number": 4
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "A104",
+      "first_mover": "B",
+      "overlay_r1_enabled": true,
+      "family": "A",
+      "seed": 104
+    },
+    {
+      "winner": "AgentA",
+      "turns": 11,
+      "residual_lp": {
+        "AgentA": 800,
+        "AgentB": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 5,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 11,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentA": 1,
+          "AgentB": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentA",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentB",
+            "turn_number": 4
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "A105",
+      "first_mover": "A",
+      "overlay_r1_enabled": true,
+      "family": "A",
+      "seed": 105
+    },
+    {
+      "winner": "AgentB",
+      "turns": 11,
+      "residual_lp": {
+        "AgentB": 800,
+        "AgentA": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 5,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 11,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {
+          "AgentB": 1,
+          "AgentA": 2
+        },
+        "level_up_restricted_turns": [
+          {
+            "player": "AgentB",
+            "turn_number": 3
+          },
+          {
+            "player": "AgentA",
+            "turn_number": 4
+          }
+        ],
+        "enabled": true
+      },
+      "provenance_violations": [],
+      "session_id": "A105",
+      "first_mover": "B",
+      "overlay_r1_enabled": true,
+      "family": "A",
+      "seed": 105
+    },
+    {
+      "winner": "AgentA",
+      "turns": 11,
+      "residual_lp": {
+        "AgentA": 800,
+        "AgentB": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 3,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentA",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 11,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {},
+        "level_up_restricted_turns": [],
+        "enabled": false
+      },
+      "provenance_violations": [],
+      "session_id": "CONTROL",
+      "first_mover": "A",
+      "overlay_r1_enabled": false,
+      "family": null,
+      "seed": null
+    },
+    {
+      "winner": "AgentB",
+      "turns": 11,
+      "residual_lp": {
+        "AgentB": 800,
+        "AgentA": 0
+      },
+      "game_over": true,
+      "forced_end_reason": "lp_zero",
+      "T_first_level_up": 3,
+      "T_first_unit_destroyed": 3,
+      "first_board_owner": "AgentB",
+      "first_board_owner_is_winner": true,
+      "T_board_control_change": null,
+      "T_lethal": 11,
+      "intervention_metadata": {
+        "overlay": "R1_first_level_up_delay",
+        "first_normal_summon_turn": {},
+        "level_up_restricted_turns": [],
+        "enabled": false
+      },
+      "provenance_violations": [],
+      "session_id": "CONTROL",
+      "first_mover": "B",
+      "overlay_r1_enabled": false,
+      "family": null,
+      "seed": null
+    }
+  ]
+}
