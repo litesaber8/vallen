@@ -83,9 +83,18 @@ No production-code modification occurs before the freeze record exists.
 
 ## Implementation Reference
 
+Implementation commit: **37cc25d** — frozen, verified R1 diagnostic/harness
+state used for the final disposition below. (Supersedes `aa6d96f`, which
+predated the matched-by-default harness upgrade and was never brought
+current until `d5b11f9`/`37cc25d`; see "Correction history" at the end of
+this section.)
+
 - Overlay: `overlay_r1.py` (additive; monkeypatches `interface.legal_level_ups`
   only when enabled; production files unmodified on disk)
 - Diagnostic harness: `experiments/r1_diagnostic.py`
+- Determinism shim: `determinism_shim.py` (additive; see "Correction
+  history" below — required for the matched comparison's results to be
+  trustworthy at all)
 - Opening builders: `balance/openings.py` (ported from the offline Balance
   Investigation artifact; Phase-1 family builders A/B/C/D)
 - CLI: matched baseline-vs-intervention comparison is the **default**
@@ -98,7 +107,7 @@ No production-code modification occurs before the freeze record exists.
 
 ### Final disposition
 
-**R1 -- NOT PROMOTED. Mechanism-neutral on Family B.**
+**R1 -- NOT PROMOTED. Mechanism-engaged, zero downstream effect on Family B.**
 
 Family A is invalid for seed-variation analysis: its pools are exactly
 5 cards (== hand size), so a seed only permutes card order, which the
@@ -116,21 +125,17 @@ overlay the only variable) shows this was not caused by R1:
 |---|---|
 | Intervention engaged | 10/10 |
 | Winner flipped | 0/10 |
-| Downstream outcome changed | 1/10 |
-| Downstream outcome unchanged | 9/10 |
+| Downstream outcome changed | 0/10 |
+| Downstream outcome unchanged | 10/10 |
 | R1 promoted | No |
 
 R1 genuinely engages every time (the first mover's turn-3 Level-Up is
 suppressed in all 10 pairs; `T_first_level_up` shifts 3 -> 7/8 in every
 pair -- confirmed via the overlay's own `level_up_actually_suppressed`
-marker, not inferred from turn numbers). In 9/10 pairs this produces zero
-change to winner, turn count, board-control timeline, or lethal turn. In
-one pair (B105_A) it measurably alters downstream timing -- turns 18->14,
-`T_board_control_change` 8->7, `T_lethal` 18->14 -- without flipping the
-winner. That single case is why the disposition is **mechanism-neutral**,
-not "no effect": R1 is capable of altering downstream state in this
-opening family, just not consequentially enough, nor consistently enough,
-to move the aggregate FP/SP balance in this family.
+marker, not inferred from turn numbers). This produces **zero** change to
+winner, turn count, board-control timeline, lethal turn, or residual LP
+in **all 10 of 10** matched pairs, verified reproducible across 5+
+independent process runs after the determinism-shim correction below.
 
 The original unmatched 30%/70% split is confirmed to be ~entirely
 hand-composition (3 of 5 seeds show the same agent winning regardless of
@@ -139,4 +144,40 @@ be carried forward as evidence for or against R2/R4.
 
 Full records: Notion (Balance Investigation v1 -> R1 -- Disposition
 (Final)); JSON: `experiments/r1_matched_familyB.json`,
-`experiments/r1_default_run.json` (post harness-default-flip, same result).
+`experiments/r1_default_run.json`.
+
+### Correction history
+
+An earlier version of this disposition (commit `d5b11f9` and before)
+reported **1/10** downstream outcome changed, citing pair B105_A (turns
+18->14, `T_board_control_change` 8->7, `T_lethal` 18->14) as evidence R1
+was "mechanism-neutral" rather than "no effect." That finding has been
+**retracted**.
+
+Root cause: `heuristic.py` explicitly documents "stable tie-break by
+[material/attacker/defender] uid" at two call sites. "Stable" there means
+consistent *within* one game once uids are assigned -- it does not mean
+reproducible *across* separate runs. `engine.py` assigns
+`uid = str(uuid.uuid4())` on every unit creation, drawing from
+`os.urandom`, unaffected by `PYTHONHASHSEED` or anything else. This made
+the matched diagnostic's `outcome_changed_count` fluctuate between 0 and 1
+across independent process invocations of the *identical* configuration
+-- the B105_A "downstream effect" was this tie-break noise, not an R1
+effect.
+
+Fix: `determinism_shim.py`, a harness-only, additive module (does not
+touch `engine.py`/`heuristic.py` on disk) that seeds `uuid4` per opening
+identity (`family`, `seed`, `first_mover`) -- deliberately excluding which
+arm (baseline/intervention) is running, so a matched pair draws the
+identical uid stream up to the point the overlay itself causes true
+divergence. Verified reproducible across 5+ independent process runs
+after the fix: `winner_flipped_count=0`, `outcome_changed_count=0`,
+`intervention_engaged_count=10`, stable every time.
+
+This is the same "aggregate result that looks meaningful but isn't"
+failure class as the original unmatched-Family-B episode, one layer
+deeper (tie-break noise instead of hand composition). The determinism
+shim is now a permanent, always-on fixture of the harness (see
+`experiments/r1_diagnostic.py`'s `determinism_shim.enable()` at import
+time) and should be treated as required infrastructure for R2/R4, not an
+R1-specific fix.
