@@ -86,6 +86,7 @@ def reset() -> None:
     _metadata["overlay"] = "R1_first_level_up_delay"
     _metadata["first_normal_summon_turn"] = {}
     _metadata["level_up_restricted_turns"] = []
+    _metadata["level_up_actually_suppressed"] = []
 
 
 def get_metadata() -> Dict[str, Any]:
@@ -163,6 +164,19 @@ def _install_patch() -> None:
         if not _ENABLED:
             return legal
         if _is_restricted(player):
+            if legal:
+                # The restriction actually suppressed one or more legal
+                # Level-Ups -- this is the case R1 is meant to test.
+                # Distinct from "restricted" alone, which only means the
+                # window was active; on a turn where no Level-Up was legal
+                # anyway (e.g. no matching upgrade card in hand yet), R1
+                # fires vacuously and has zero behavioral effect. Reports
+                # that only check level_up_restricted_turns can otherwise
+                # misread "R1 was active" as "R1 did something."
+                record = {"player": player.name, "turn_number": _last_seen_turn_number}
+                suppressed = _metadata.setdefault("level_up_actually_suppressed", [])
+                if record not in suppressed:
+                    suppressed.append(record)
             return []
         return legal
 

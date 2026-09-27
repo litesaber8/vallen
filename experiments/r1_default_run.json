@@ -2,7 +2,7 @@
   "summary": {
     "n_pairs": 10,
     "winner_flipped_count": 0,
-    "outcome_changed_count": 1,
+    "outcome_changed_count": 0,
     "intervention_engaged_count": 10,
     "baseline_fp_win_rate": 0.3,
     "R1_fp_win_rate": 0.3,
@@ -319,9 +319,9 @@
         "R1_winner": "AgentB",
         "winner_flipped": false,
         "baseline_turns": 18,
-        "R1_turns": 14,
+        "R1_turns": 18,
         "baseline_T_first_level_up": 3,
-        "R1_T_first_level_up": 8,
+        "R1_T_first_level_up": null,
         "baseline_T_first_unit_destroyed": 3,
         "R1_T_first_unit_destroyed": 3,
         "baseline_first_board_owner": "AgentA",
@@ -329,9 +329,9 @@
         "baseline_first_board_is_winner": false,
         "R1_first_board_is_winner": false,
         "baseline_T_board_control_change": 8,
-        "R1_T_board_control_change": 7,
+        "R1_T_board_control_change": 8,
         "baseline_T_lethal": 18,
-        "R1_T_lethal": 14,
+        "R1_T_lethal": 18,
         "baseline_residual_lp": {
           "AgentA": -100,
           "AgentB": 750
@@ -347,12 +347,8 @@
           }
         ],
         "mechanism_marker_changed": true,
-        "outcome_changed": true,
-        "outcome_changed_fields": [
-          "turns",
-          "T_board_control_change",
-          "T_lethal"
-        ]
+        "outcome_changed": false,
+        "outcome_changed_fields": []
       },
       {
         "matched_pair_id": "B105_B",
@@ -1060,19 +1056,19 @@
     },
     {
       "winner": "AgentB",
-      "turns": 14,
+      "turns": 18,
       "residual_lp": {
         "AgentA": -100,
         "AgentB": 750
       },
       "game_over": true,
       "forced_end_reason": "lp_zero",
-      "T_first_level_up": 8,
+      "T_first_level_up": null,
       "T_first_unit_destroyed": 3,
       "first_board_owner": "AgentA",
       "first_board_owner_is_winner": false,
-      "T_board_control_change": 7,
-      "T_lethal": 14,
+      "T_board_control_change": 8,
+      "T_lethal": 18,
       "intervention_metadata": {
         "overlay": "R1_first_level_up_delay",
         "first_normal_summon_turn": {
